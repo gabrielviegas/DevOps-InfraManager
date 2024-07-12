@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Criar VM no VirtualBox
+      vbox_guest:
+        name: nova_vm
+        ostype: Ubuntu_64
+        state: poweredoff
+        vram: 128
+        cpus: 2
+        memory: 2048
+        disks:
+          - size: 10240
+            format: vdi
+        network_interfaces:
+          - host_interface: vboxnet0
+            type: bridged
+            bridge: br0
+      register: vm_created
+
+    - debug:
+        var: vm_created
