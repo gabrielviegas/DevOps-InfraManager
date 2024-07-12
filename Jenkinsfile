@@ -1,9 +1,10 @@
 pipeline {
     agent any
+    
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/gabrielviegas/DevOps-InfraManager.git'
+                git branch: 'main', url: 'https://github.com/gabrielviegas/DevOps-InfraManager.git'
             }
         }
         stage('Terraform Init') {
@@ -23,12 +24,12 @@ pipeline {
         }
         stage('Ansible Playbook') {
             steps {
-                sh 'ansible-playbook -i hosts playbook.yml'
+                sh 'ansible-playbook -i ansible/inventory/hosts ansible/playbook.yml'
             }
         }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t sua-imagem .'
+                sh 'docker build -t sua-imagem docker/.'
             }
         }
         stage('Docker Run') {
