@@ -1,0 +1,20 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Atualizar a lista de pacotes
+      apt:
+        update_cache: yes
+
+    - name: Instalar pacotes necessários
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - nginx
+        - git
+
+    - name: Iniciar e habilitar o Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
