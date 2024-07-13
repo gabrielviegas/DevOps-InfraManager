@@ -48,10 +48,12 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                sh '/usr/local/bin/ansible-playbook create_vm.yml'
+                script {
+                    // Executando o playbook a partir do diretório clonado
+                    sh 'ansible-playbook /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/create_vm.yml'
+                }
             }
         }
-
 
         stage('Testes e Validação') {
             steps {
