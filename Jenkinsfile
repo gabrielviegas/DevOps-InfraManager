@@ -73,7 +73,7 @@ pipeline {
         stage('Instalação do SonarQube via Docker') {
             steps {
                 sh '''
-                docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:${SONARQUBE_VERSION}
+                docker-compose -f /home/viegas/devops/DevOps-InfraManager/sonarqube/docker-compose.yml up -d
                 '''
             }
         }
