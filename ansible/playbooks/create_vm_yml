@@ -1,27 +1,19 @@
 ---
-- name: Criar VM no VirtualBox
-  hosts: localhost
+- hosts: localhost
   tasks:
-    - name: Instalar VirtualBox Extension Pack
-      command: /usr/bin/VBoxManage extpack install --replace /path/to/extension_pack.vbox-extpack
-
-    - name: Criar VM
-      command: /usr/bin/VBoxManage createvm --name "VMTeste" --ostype Ubuntu_64 --register
-
-    - name: Configurar CPU e Memória
-      command: /usr/bin/VBoxManage modifyvm "VMTeste" --cpus 2 --memory 2048
-
-    - name: Criar disco SATA
-      command: /usr/bin/VBoxManage createhd --filename "/path/to/VMTeste.vdi" --size 10240
-
-    - name: Adicionar controlador SATA
-      command: /usr/bin/VBoxManage storagectl "VMTeste" --name "SATA Controller" --add sata --controller IntelAhci
-
-    - name: Anexar disco SATA à VM
-      command: /usr/bin/VBoxManage storageattach "VMTeste" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/path/to/VMTeste.vdi"
-
-    - name: Configurar rede interna
-      command: /usr/bin/VBoxManage modifyvm "VMTeste" --nic1 intnet --intnet1 "intnet"
-
-    - name: Iniciar VM
-      command: /usr/bin/VBoxManage startvm "VMTeste" --type headless
+    - name: Criar VM no VirtualBox
+      vbox_guest:
+        name: nova_vm
+        ostype: Ubuntu_64
+        state: poweredoff
+        vram: 128
+        cpus: 2
+        memory: 2048
+        disks:
+          - size: 10240
+            format: vdi
+        network_interfaces:
+          - host_interface: vboxnet0
+            type: bridged
+            bridge: br0
+      register: vm_created
