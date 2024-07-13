@@ -48,7 +48,7 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                sh '/usr/local/bin/ansible-playbook playbooks/create_vm.yml'
+                sh '/usr/local/bin/ansible-playbook create_vm.yml'
             }
         }
 
