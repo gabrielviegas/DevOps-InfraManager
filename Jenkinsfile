@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        VIRTUALBOX_VERSION = '6.1'  // Versão do VirtualBox a ser instalada
-        PROMETHEUS_VERSION = '2.35.0'  // Versão do Prometheus a ser instalada
-        GRAFANA_VERSION = '8.3.5'  // Versão do Grafana a ser instalada
+        VIRTUALBOX_VERSION = '6.1'
+        PROMETHEUS_VERSION = '2.35.0'
+        GRAFANA_VERSION = '8.3.5'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/gabrielviegas/DevOps-InfraManager.git'
+                git branch: 'main', credentialsId: 'github-token', url: 'https://github.com/gabrielviegas/DevOps-InfraManager.git'
             }
         }
 
@@ -48,46 +48,30 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                script {
-                    try {
-                        sh 'ansible-playbook -i inventories/hosts playbooks/create_vm.yml'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error "Falha ao executar playbook do Ansible: ${e.message}"
-                    }
-                }
+                sh 'ansible-playbook -i inventories/hosts playbooks/create_vm.yml'
             }
         }
 
         stage('Testes e Validação') {
             steps {
-                script {
-                    try {
-                        sh 'ssh usuario@endereco-da-vm \'echo "Hello from VM" > /tmp/teste.txt\''
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error "Falha ao executar teste na VM: ${e.message}"
-                    }
-                }
+                sh '''
+                ssh usuario@endereco-da-vm 'echo "Hello from VM" > /tmp/teste.txt'
+                '''
             }
         }
 
         stage('Finalização e Limpeza') {
             steps {
-                script {
-                    sh '''
-                    pkill prometheus || true
-                    pkill grafana-server || true
-                    '''
-                    echo 'Prometheus e Grafana parados com sucesso.'
-                }
+                sh '''
+                pkill prometheus
+                pkill grafana-server
+                '''
             }
         }
 
         stage('Post-build Actions') {
             steps {
-                echo 'Executando ações pós-build'
-                // Aqui você pode adicionar ações adicionais, como notificações ou arquivamento de artefatos
+                echo 'Ações pós-build'
             }
         }
     }
