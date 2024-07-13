@@ -5,8 +5,13 @@ pipeline {
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
         SONARQUBE_VERSION = 'latest'
-        SUDO_PASSWORD = credentials('sudo-password')
-        PATH = "/usr/local/bin:$PATH"
+    }
+
+    options {
+        // Usar Credentials Binding para gerenciar senhas de forma segura
+        credentialsBinding {
+            usernamePassword('sudo-password', 'SUDO_PASSWORD')
+        }
     }
 
     stages {
@@ -18,10 +23,7 @@ pipeline {
 
         stage('Instalação do VirtualBox') {
             steps {
-                sh '''
-                echo ${SUDO_PASSWORD} | sudo -S apt update
-                echo ${SUDO_PASSWORD} | sudo -S apt install -y virtualbox
-                '''
+                sh 'sudo apt update && sudo apt install -y virtualbox'
             }
         }
 
@@ -59,14 +61,19 @@ pipeline {
         stage('Instalação do Docker') {
             steps {
                 sh '''
-                echo ${SUDO_PASSWORD} | sudo -S apt-get update
-                echo ${SUDO_PASSWORD} | sudo -S apt-get install -y ca-certificates curl
-                echo ${SUDO_PASSWORD} | sudo -S install -m 0755 -d /etc/apt/keyrings
-                echo ${SUDO_PASSWORD} | sudo -S curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-                echo ${SUDO_PASSWORD} | sudo -S chmod a+r /etc/apt/keyrings/docker.asc
+                sudo apt-get update
+                sudo apt-get install -y ca-certificates curl
+                sudo install -m 0755 -d /etc/apt/keyrings
+                sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-                echo ${SUDO_PASSWORD} | sudo -S apt-get update
-                echo ${SUDO_PASSWORD} | sudo -S apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                echo \
+                  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+                  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+                  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+                sudo apt-get update
+                sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 '''
             }
         }
@@ -77,11 +84,9 @@ pipeline {
             }
         }
 
-        stage('Instalação do SonarQube via Docker Compose') {
+        stage('Instalação do SonarQube via Docker') {
             steps {
-                sh '''
-                echo ${SUDO_PASSWORD} | sudo -S docker-compose -f /home/viegas/devops/DevOps-InfraManager/sonarqube/docker-compose.yml up -d
-                '''
+                sh 'sudo docker-compose -f /home/viegas/devops/DevOps-InfraManager/sonarqube/docker-compose.yml up -d'
             }
         }
     }
