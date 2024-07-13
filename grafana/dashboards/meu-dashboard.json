@@ -4,7 +4,7 @@
       "title": "Monitoramento da Aplicação",
       "panels": [
         {
-          "title": "Uso de CPU",
+          "title": "Uso de CPUU",
           "type": "graph",
           "targets": [
             {
