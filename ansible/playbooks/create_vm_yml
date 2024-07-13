@@ -4,24 +4,24 @@
   tasks:
     - name: Criar VM
       ansible.builtin.command: >
-        VBoxManage createvm --name "VMTeste1" --ostype Ubuntu_64 --register
+        VBoxManage createvm --name "VMTeste2" --ostype Ubuntu_64 --register
 
     - name: Configurar CPU e Memória
       ansible.builtin.command: >
-        VBoxManage modifyvm "VMTeste1" --cpus 2 --memory 2048
+        VBoxManage modifyvm "VMTeste2" --cpus 2 --memory 2048
 
     - name: Criar disco SATA
       ansible.builtin.command: >
-        VBoxManage createhd --filename "/home/viegas/devops/VMTeste1.vdi" --size 10240
+        VBoxManage createhd --filename "/var/lib/jenkins/VirtualBox VMs/VMTeste2/VMTeste2.vdi" --size 10240
 
     - name: Adicionar controlador SATA
       ansible.builtin.command: >
-        VBoxManage storagectl "VMTeste1" --name "SATA Controller" --add sata --controller IntelAhci
+        VBoxManage storagectl "VMTeste2" --name "SATA Controller" --add sata --controller IntelAhci
 
     - name: Anexar disco SATA à VM
       ansible.builtin.command: >
-        VBoxManage storageattach "VMTeste1" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/home/viegas/devops/VMTeste1.vdi"
+        VBoxManage storageattach "VMTeste2" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/var/lib/jenkins/VirtualBox VMs/VMTeste2/VMTeste2.vdi"
 
     - name: Configurar rede interna
       ansible.builtin.command: >
-        VBoxManage modifyvm "VMTestVMTeste1eGabriel1" --nic1 intnet --intnet1 "intnet"
+        VBoxManage modifyvm "VMTeste2" --nic1 intnet --intnet1 "intnet"
