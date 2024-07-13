@@ -24,6 +24,15 @@ pipeline {
             }
         }
 
+
+        stage('Criação da VM') {
+            steps {
+                dir('/home/viegas/devops/DevOps-InfraManager/ansible/playbooks') {
+                    sh 'ansible-playbook create_vm_yml'
+                }
+            }
+        }
+
         stage('Configuração do Prometheus') {
             steps {
                 sh '''
@@ -47,26 +56,25 @@ pipeline {
             }
         }
 
-        stage('Criação da VM') {
-            steps {
-                dir('/home/viegas/devops/DevOps-InfraManager/ansible/playbooks') {
-                    sh 'ansible-playbook create_vm_yml'
-                }
-            }
-        }
-
-        stage('Finalização e Limpeza') {
+        stage('Instalação do Docker') {
             steps {
                 sh '''
-                pkill prometheus
-                pkill grafana-server
+                echo ${SUDO_PASSWORD} | sudo -S apt install -y docker.io
                 '''
             }
         }
 
-        stage('Post-build Actions') {
+        stage('Validação da instalação do Docker') {
             steps {
-                echo 'Ações pós-build'
+                sh 'docker --version'
+            }
+        }
+
+        stage('Instalação do SonarQube via Docker') {
+            steps {
+                sh '''
+                docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:${SONARQUBE_VERSION}
+                '''
             }
         }
     }
