@@ -4,7 +4,7 @@ pipeline {
     environment {
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
-        SONARQUBE_VERSION = 'latest'  // Adicione a versão do SonarQube que deseja utilizar
+        SONARQUBE_VERSION = 'latest'
         SUDO_PASSWORD = credentials('sudo-password')
         PATH = "/usr/local/bin:$PATH"
     }
@@ -59,16 +59,14 @@ pipeline {
         stage('Instalação do Docker') {
             steps {
                 sh '''
-                echo ${SUDO_PASSWORD} | sudo -S apt install -y docker.io
-                '''
-            }
-        }
+                echo ${SUDO_PASSWORD} | sudo -S apt-get update
+                echo ${SUDO_PASSWORD} | sudo -S apt-get install -y ca-certificates curl
+                echo ${SUDO_PASSWORD} | sudo -S install -m 0755 -d /etc/apt/keyrings
+                echo ${SUDO_PASSWORD} | sudo -S curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+                echo ${SUDO_PASSWORD} | sudo -S chmod a+r /etc/apt/keyrings/docker.asc
 
-        stage('Instalação do Docker Compose') {
-            steps {
-                sh '''
-                echo ${SUDO_PASSWORD} | sudo -S curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                echo ${SUDO_PASSWORD} | sudo -S chmod +x /usr/local/bin/docker-compose
+                echo ${SUDO_PASSWORD} | sudo -S apt-get update
+                echo ${SUDO_PASSWORD} | sudo -S apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 '''
             }
         }
@@ -79,10 +77,11 @@ pipeline {
             }
         }
 
-        stage('Instalação do SonarQube via Docker') {
+        stage('Instalação do SonarQube via Docker Compose') {
             steps {
-                sh 'docker-compose -f /home/viegas/devops/DevOps-InfraManager/sonarqube/docker-compose.yml up -d'
-                
+                sh '''
+                echo ${SUDO_PASSWORD} | sudo -S docker-compose -f /home/viegas/devops/DevOps-InfraManager/sonarqube/docker-compose.yml up -d
+                '''
             }
         }
     }
