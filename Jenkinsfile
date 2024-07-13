@@ -5,6 +5,7 @@ pipeline {
         VIRTUALBOX_VERSION = '6.1'
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
+        SUDO_PASSWORD = credentials('sudo-password')
     }
 
     stages {
@@ -17,8 +18,8 @@ pipeline {
         stage('Instalação do VirtualBox') {
             steps {
                 sh '''
-                sudo apt update
-                sudo apt install -y virtualbox-${VIRTUALBOX_VERSION}
+                echo ${SUDO_PASSWORD} | sudo -S apt update
+                echo ${SUDO_PASSWORD} | sudo -S apt install -y virtualbox-${VIRTUALBOX_VERSION}
                 '''
             }
         }
