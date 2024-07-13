@@ -3,25 +3,25 @@
   hosts: localhost
   tasks:
     - name: Instalar VirtualBox Extension Pack
-      command: VBoxManage extpack install --replace /path/to/extension_pack.vbox-extpack
+      command: /usr/bin/VBoxManage extpack install --replace /path/to/extension_pack.vbox-extpack
 
     - name: Criar VM
-      command: VBoxManage createvm --name "VMTeste" --ostype Ubuntu_64 --register
+      command: /usr/bin/VBoxManage createvm --name "VMTeste" --ostype Ubuntu_64 --register
 
     - name: Configurar CPU e Memória
-      command: VBoxManage modifyvm "VMTeste" --cpus 2 --memory 2048
+      command: /usr/bin/VBoxManage modifyvm "VMTeste" --cpus 2 --memory 2048
 
     - name: Criar disco SATA
-      command: VBoxManage createhd --filename "/path/to/VMTeste.vdi" --size 10240
+      command: /usr/bin/VBoxManage createhd --filename "/path/to/VMTeste.vdi" --size 10240
 
     - name: Adicionar controlador SATA
-      command: VBoxManage storagectl "VMTeste" --name "SATA Controller" --add sata --controller IntelAhci
+      command: /usr/bin/VBoxManage storagectl "VMTeste" --name "SATA Controller" --add sata --controller IntelAhci
 
     - name: Anexar disco SATA à VM
-      command: VBoxManage storageattach "VMTeste" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/path/to/VMTeste.vdi"
+      command: /usr/bin/VBoxManage storageattach "VMTeste" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/path/to/VMTeste.vdi"
 
     - name: Configurar rede interna
-      command: VBoxManage modifyvm "VMTeste" --nic1 intnet --intnet1 "intnet"
+      command: /usr/bin/VBoxManage modifyvm "VMTeste" --nic1 intnet --intnet1 "intnet"
 
     - name: Iniciar VM
-      command: VBoxManage startvm "VMTeste" --type headless
+      command: /usr/bin/VBoxManage startvm "VMTeste" --type headless
