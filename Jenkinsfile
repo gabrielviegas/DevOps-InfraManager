@@ -4,6 +4,7 @@ pipeline {
     environment {
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
+        SONARQUBE_VERSION = 'latest'  // Adicione a versão do SonarQube que deseja utilizar
         SUDO_PASSWORD = credentials('sudo-password')
         PATH = "/usr/local/bin:$PATH"
     }
@@ -23,7 +24,6 @@ pipeline {
                 '''
             }
         }
-
 
         stage('Criação da VM') {
             steps {
@@ -60,6 +60,15 @@ pipeline {
             steps {
                 sh '''
                 echo ${SUDO_PASSWORD} | sudo -S apt install -y docker.io
+                '''
+            }
+        }
+
+        stage('Instalação do Docker Compose') {
+            steps {
+                sh '''
+                echo ${SUDO_PASSWORD} | sudo -S curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                echo ${SUDO_PASSWORD} | sudo -S chmod +x /usr/local/bin/docker-compose
                 '''
             }
         }
