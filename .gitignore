@@ -1,0 +1,12 @@
+# Arquivos gerados durante o build
+*.ova            # Arquivos de exportação de VMs
+*.vdi            # Arquivos de disco VirtualBox
+packer_cache/
+
+# Arquivos de configuração com credenciais e chaves
+*.env            # Arquivos de variáveis de ambiente
+
+# Arquivos de logs e temporários
+*.log
+logs/
+tmp/
