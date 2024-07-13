@@ -21,6 +21,7 @@ pipeline {
                 sh 'whoami'
                 sh 'which ansible-playbook'
                 sh 'ls -l /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/'
+                sh 'cat /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/create_vm.yml'
             }
         }
 
@@ -58,10 +59,9 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                sh '''
-                cd /home/viegas/devops/DevOps-InfraManager/ansible/playbooks
-                /usr/local/bin/ansible-playbook create_vm.yml
-                '''
+                dir('/home/viegas/devops/DevOps-InfraManager/ansible/playbooks') {
+                    sh 'ansible-playbook create_vm.yml'
+                }
             }
         }
 
