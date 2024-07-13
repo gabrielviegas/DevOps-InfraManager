@@ -60,7 +60,7 @@ pipeline {
         stage('Criação da VM') {
             steps {
                 dir('/home/viegas/devops/DevOps-InfraManager/ansible/playbooks') {
-                    sh 'ansible-playbook create_vm.yml'
+                    sh 'ansible-playbook create_vm_yml'
                 }
             }
         }
