@@ -49,8 +49,7 @@ pipeline {
         stage('Criação da VM') {
             steps {
                 script {
-                    // Executando o playbook a partir do diretório clonado
-                    sh 'ansible-playbook /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/create_vm.yml'
+                    sh 'ansible-playbook create_vm.yml'
                 }
             }
         }
