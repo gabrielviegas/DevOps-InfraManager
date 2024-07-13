@@ -13,7 +13,7 @@
       ansible.builtin.command: >
         VBoxManage modifyvm "VMTeste_{{ timestamp }}" --cpus 2 --memory 2048
 
-    - name: Criar disco SATAa
+    - name: Criar disco SATA
       ansible.builtin.command: >
         VBoxManage createhd --filename "/var/lib/jenkins/VirtualBox VMs/VMTeste_{{ timestamp }}/VMTeste_{{ timestamp }}.vdi" --size 10240
 
