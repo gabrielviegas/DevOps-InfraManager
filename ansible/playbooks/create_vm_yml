@@ -26,6 +26,3 @@
       ansible.builtin.command: >
         VBoxManage modifyvm "VMTeste" --nic1 intnet --intnet1 "intnet"
 
-    - name: Iniciar VM
-      ansible.builtin.command: >
-        VBoxManage startvm "VMTeste" --type headless
