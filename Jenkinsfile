@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        VIRTUALBOX_VERSION = '6.1'
+        VIRTUALBOX_VERSION = '6.1.50'
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
         SUDO_PASSWORD = credentials('sudo-password')
