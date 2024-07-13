@@ -55,14 +55,6 @@ pipeline {
             }
         }
 
-        stage('Testes e Validação') {
-            steps {
-                sh '''
-                ssh usuario@endereco-da-vm 'echo "Hello from VM" > /tmp/teste.txt'
-                '''
-            }
-        }
-
         stage('Finalização e Limpeza') {
             steps {
                 sh '''
