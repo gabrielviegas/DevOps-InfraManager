@@ -15,16 +15,6 @@ pipeline {
             }
         }
 
-        stage('Debug Environment') {
-            steps {
-                sh 'env'
-                sh 'whoami'
-                sh 'which ansible-playbook'
-                sh 'ls -l /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/'
-                sh 'cat /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/create_vm.yml'
-            }
-        }
-
         stage('Instalação do VirtualBox') {
             steps {
                 sh '''
