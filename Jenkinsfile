@@ -5,12 +5,22 @@ pipeline {
         PROMETHEUS_VERSION = '2.35.0'
         GRAFANA_VERSION = '8.3.5'
         SUDO_PASSWORD = credentials('sudo-password')
+        PATH = "/usr/local/bin:$PATH"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'github-token', url: 'https://github.com/gabrielviegas/DevOps-InfraManager.git'
+            }
+        }
+
+        stage('Debug Environment') {
+            steps {
+                sh 'env'
+                sh 'whoami'
+                sh 'which ansible-playbook'
+                sh 'ls -l /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/'
             }
         }
 
@@ -48,9 +58,7 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                script {
-                    sh 'ansible-playbook create_vm.yml'
-                }
+                sh '/usr/local/bin/ansible-playbook /home/viegas/devops/DevOps-InfraManager/ansible/playbooks/create_vm.yml'
             }
         }
 
