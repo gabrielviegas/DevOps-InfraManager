@@ -1,44 +1,28 @@
 ---
-- name: Criar VM no VirtualBox com verificação de existência
+- name: Criar VM no VirtualBox
   hosts: localhost
-  vars:
-    vm_name: "VMTeste"
-    new_vm_name: "VMTesteGabriel"
   tasks:
-    - name: Verificar se a VM já existe
-      ansible.builtin.shell: >
-        VBoxManage showvminfo "{{ vm_name }}" --machinereadable | grep -q ^name=\"{{ vm_name }}\"
-      register: vm_exists
-      ignore_errors: yes
-
-    - name: Criar VM com nome alternativo se já existir
+    - name: Criar VM
       ansible.builtin.command: >
-        VBoxManage createvm --name "{{ new_vm_name }}" --ostype Ubuntu_64 --register
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
+        VBoxManage createvm --name "VMTesteGabriel" --ostype Ubuntu_64 --register
 
     - name: Configurar CPU e Memória
       ansible.builtin.command: >
-        VBoxManage modifyvm "{{ new_vm_name }}" --cpus 2 --memory 2048
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
+        VBoxManage modifyvm "VMTesteGabriel" --cpus 2 --memory 2048
 
     - name: Criar disco SATA
       ansible.builtin.command: >
-        VBoxManage createhd --filename "/path/to/{{ new_vm_name }}.vdi" --size 10240
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
+        VBoxManage createhd --filename "/path/to/VMTesteGabriel.vdi" --size 10240
 
     - name: Adicionar controlador SATA
       ansible.builtin.command: >
-        VBoxManage storagectl "{{ new_vm_name }}" --name "SATA Controller" --add sata --controller IntelAhci
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
+        VBoxManage storagectl "VMTesteGabriel" --name "SATA Controller" --add sata --controller IntelAhci
 
     - name: Anexar disco SATA à VM
       ansible.builtin.command: >
-        VBoxManage storageattach "{{ new_vm_name }}" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/path/to/{{ new_vm_name }}.vdi"
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
+        VBoxManage storageattach "VMTesteGabriel" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "/path/to/VMTesteGabriel.vdi"
 
     - name: Configurar rede interna
       ansible.builtin.command: >
-        VBoxManage modifyvm "{{ new_vm_name }}" --nic1 intnet --intnet1 "intnet"
-      when: vm_exists.rc != 0  # Executa apenas se a VM não existir com o nome original
-
+        VBoxManage modifyvm "VMTesteGabriel" --nic1 intnet --intnet1 "intnet"
 
