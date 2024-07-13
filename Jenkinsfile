@@ -48,7 +48,7 @@ pipeline {
 
         stage('Criação da VM') {
             steps {
-                sh 'ansible-playbook -i inventories/hosts playbooks/create_vm.yml'
+                sh 'ansible-playbook create_vm.yml'
             }
         }
 
