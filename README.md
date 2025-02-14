@@ -13,6 +13,9 @@ The architecture involves:
 - **Containerized Deployments:** Docker and Docker Compose for deploying and managing applications.
 - **Code Quality Assurance:** SonarQube for continuous inspection of code quality.
 
+![Architecture](https://github.com/user-attachments/assets/a83eccc0-efba-494b-b85a-d49a57c4b6b6)
+
+
 ## Implementation
 ### Tools and Technologies
 - **Virtualization:** VirtualBox
